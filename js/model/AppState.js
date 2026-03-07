@@ -3,7 +3,8 @@
  * Estado global de la aplicación. Única fuente de verdad.
  */
 const AppState = {
-  backendUrl:    'https://iot-backend-z9gc.onrender.com',
+  // URL activa usada por ApiService en la version modular del frontend.
+  backendUrl:    'https://iot-backend-b5v5.onrender.com',
   defaultDevice: '441095104B78F267112345678',
   currentDevice: '441095104B78F267112345678',
   allTags:       [],
