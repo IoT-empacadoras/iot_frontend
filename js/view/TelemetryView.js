@@ -52,9 +52,15 @@ const TelemetryView = (() => {
       sel.innerHTML = '<option value="">Sin variables aún</option>';
       return;
     }
+
+    const previousValue = sel.value;
     sel.innerHTML = tags.map(t =>
       '<option value="' + t + '">' + Helpers.formatTagLabel(t) + '</option>'
     ).join('');
+
+    if (tags.includes(previousValue)) {
+      sel.value = previousValue;
+    }
   }
 
   // ── Dispositivo inactivo ────────────────────────────────────────────────────
@@ -76,11 +82,33 @@ const TelemetryView = (() => {
   // ── KPI Cards ────────────────────────────────────────────────────────────────
   const KPI_DEFS = [
     { id: 'kpi-ppm',    key: 'telemetry_pv_ppm',            unit: 'ppm', dec: 1 },
+    { id: 'kpi-sp-ppm', key: 'telemetry_sp_velocidad_ppm',  unit: 'ppm', dec: 1 },
     { id: 'kpi-th',     key: 'telemetry_pv_temp_mordaza_H', unit: '°C',  dec: 1 },
     { id: 'kpi-tv',     key: 'telemetry_pv_temp_mordaza_V', unit: '°C',  dec: 1 },
     { id: 'kpi-peso',   key: 'telemetry_pv_peso_promedio',  unit: 'g',   dec: 1 },
     { id: 'kpi-presion',key: 'telemetry_pv_presion_aire',   unit: 'bar', dec: 2 },
   ];
+
+  function syncTelemetryLayout(tags) {
+    const activeTags = new Set(tags);
+
+    KPI_DEFS.forEach(({ id, key }) => {
+      const card = document.getElementById(id);
+      if (!card) return;
+      card.style.display = activeTags.has(key) ? '' : 'none';
+    });
+
+    const runningCard = document.getElementById('kpi-running');
+    if (runningCard) {
+      runningCard.style.display = activeTags.has('telemetry_is_running') ? '' : 'none';
+    }
+
+    const variableSelector = document.getElementById('variable-selector');
+    const controlsBar = variableSelector?.closest('.controls-bar');
+    if (controlsBar) {
+      controlsBar.style.display = tags.length ? '' : 'none';
+    }
+  }
 
   function updateKpiCards(data) {
     KPI_DEFS.forEach(({ id, key, unit, dec }) => {
@@ -215,6 +243,7 @@ const TelemetryView = (() => {
   return {
     setConnStatus, updateSidebarTime,
     populateDeviceSelector, refreshDeviceLabels, populateVariableSelector,
+    syncTelemetryLayout,
     updateKpiCards, showInactiveDevice, setRunningInactive,
     renderChart, updateChartHeader,
     renderTable,

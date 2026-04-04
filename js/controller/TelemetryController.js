@@ -40,10 +40,14 @@ const TelemetryController = (() => {
       }
 
       AppState.setTags(tags);
+      TelemetryView.syncTelemetryLayout(tags);
 
       if (!tags.length) {
         TelemetryView.populateVariableSelector([]);
         TelemetryView.updateKpiCards({});
+        AppState.clearChart();
+        TelemetryView.updateChartHeader('Sin variables activas', '', 0);
+        TelemetryView.renderTable([]);
         return;
       }
 
