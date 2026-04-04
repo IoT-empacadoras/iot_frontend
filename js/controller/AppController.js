@@ -54,6 +54,21 @@ const AppController = (() => {
 
     document.getElementById('refresh-audit-btn').addEventListener('click',
       () => AuditController.refresh());
+
+    document.getElementById('add-device-btn').addEventListener('click', async () => {
+      const input = document.getElementById('new-device-id');
+      const newId = input.value.trim();
+      if (!newId) return;
+      try {
+        await ApiService.addDevice(newId);
+        input.value = '';
+        AppState.setDevice(newId);
+        await TelemetryController.loadDevices();
+      } catch (err) {
+        console.error('Error adding device', err);
+      }
+    });
+
   }
 
   // ── Health polling ────────────────────────────────────────────────────────────

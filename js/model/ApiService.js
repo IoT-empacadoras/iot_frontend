@@ -60,5 +60,14 @@ const ApiService = (() => {
     return d.events || [];
   }
 
-  return { getHealth, getDevices, getDeviceObjects, getSensors, getLatest, getHistory, getEventSummary, getEvents };
+  async function addDevice(deviceId) {
+    const r = await fetch(url('/api/devices'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deviceId })
+    });
+    return r.ok;
+  }
+
+  return { getHealth, getDevices, getDeviceObjects, getSensors, getLatest, getHistory, getEventSummary, getEvents, addDevice };
 })();

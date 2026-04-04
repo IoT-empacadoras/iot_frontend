@@ -8,7 +8,6 @@ const DEFAULT_DEVICE = '441095104B78F267112345678';
 let   currentDevice  = DEFAULT_DEVICE;
 let   chart          = null;
 let   allTags        = [];
-let   deviceMap      = {}; // id → objeto device con health
 
 // ─────────────────────────────────────────────
 // BOOT
@@ -50,7 +49,6 @@ function setupEventListeners() {
   document.getElementById('device-selector').addEventListener('change', e => {
     currentDevice = e.target.value || DEFAULT_DEVICE;
     document.getElementById('sidebar-device-id').textContent = currentDevice;
-    updateSidebarForDevice(currentDevice);
     loadTags();
   });
   document.getElementById('load-data-btn').addEventListener('click', loadChartData);
@@ -66,42 +64,8 @@ function setupEventListeners() {
 async function checkHealth() {
   try {
     const r = await fetch(BACKEND_URL + '/api/health');
-    if (!r.ok) { setConnStatus('offline'); return; }
-    // Backend activo — actualizar salud por dispositivo
-    await refreshDeviceHealth();
+    setConnStatus(r.ok ? 'online' : 'offline');
   } catch { setConnStatus('offline'); }
-}
-
-// Refresca deviceMap y actualiza labels del selector sin re-renderizar todo
-async function refreshDeviceHealth() {
-  try {
-    const r = await fetch(BACKEND_URL + '/api/devices');
-    const d = await r.json();
-    deviceMap = {};
-    (d.devices || []).forEach(dev => { if (dev.id) deviceMap[dev.id] = dev; });
-    const sel = document.getElementById('device-selector');
-    Array.from(sel.options).forEach(opt => {
-      const dev = deviceMap[opt.value];
-      const isActive = dev?.health?.status === 'healthy';
-      opt.textContent = isActive ? '● ' + opt.value + ' (activo)' : '○ ' + opt.value;
-    });
-    updateSidebarForDevice(currentDevice);
-  } catch {}
-}
-
-// Actualiza el punto de conexión del sidebar según la salud del dispositivo activo
-function updateSidebarForDevice(deviceId) {
-  const dev = deviceMap[deviceId];
-  if (!dev) return;
-  const isHealthy = dev?.health?.status === 'healthy';
-  const isMqttOnline = dev?.status === 'online';
-  if (isHealthy) {
-    setConnStatus('online');
-  } else if (isMqttOnline) {
-    setConnStatus('loading'); // online pero sin actividad reciente
-  } else {
-    setConnStatus('offline');
-  }
 }
 
 function setConnStatus(state) {
@@ -118,28 +82,15 @@ function setConnStatus(state) {
 // ─────────────────────────────────────────────
 async function loadDevices() {
   const sel = document.getElementById('device-selector');
-  sel.innerHTML = '<option value="' + DEFAULT_DEVICE + '">○ ' + DEFAULT_DEVICE + '</option>';
+  sel.innerHTML = '<option value="' + DEFAULT_DEVICE + '">' + DEFAULT_DEVICE + '</option>';
   try {
     const r = await fetch(BACKEND_URL + '/api/devices');
     const d = await r.json();
-    deviceMap = {};
-    (d.devices || []).forEach(dev => { if (dev.id) deviceMap[dev.id] = dev; });
-    // IDs activos primero, luego el resto (incluyendo DEFAULT si no viene)
-    const activeIds = (d.devices || []).filter(x => x.id && x.health?.status === 'healthy').map(x => x.id);
-    const allIds    = Array.from(new Set([
-      ...(d.devices || []).map(x => x.id).filter(Boolean),
-      DEFAULT_DEVICE
-    ]));
-    const sortedIds = [...new Set([...activeIds, ...allIds])];
-    sel.innerHTML = sortedIds.map(id => {
-      const isActive = deviceMap[id]?.health?.status === 'healthy';
-      const label = isActive ? '● ' + id + ' (activo)' : '○ ' + id;
-      return '<option value="' + id + '">' + label + '</option>';
-    }).join('');
+    const ids = Array.from(new Set([DEFAULT_DEVICE, ...(d.devices || []).map(x => x.id).filter(Boolean)]));
+    sel.innerHTML = ids.map(id => '<option value="' + id + '">' + id + '</option>').join('');
   } catch {}
   sel.value = currentDevice;
   document.getElementById('sidebar-device-id').textContent = currentDevice;
-  updateSidebarForDevice(currentDevice);
   loadTags();
 }
 
