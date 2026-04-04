@@ -12,6 +12,47 @@
 </head>
 <body class="layout">
 
+  <div id="auth-shell" class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-brand">ReadyPackers</div>
+      <h1 class="auth-title">Acceso al Monitor IoT</h1>
+      <p class="auth-subtitle">Inicia sesión con correo electrónico y contraseña.</p>
+
+      <div id="auth-message" class="auth-message"></div>
+
+      <form id="login-form" class="auth-form">
+        <label class="auth-label" for="login-email">Correo electrónico</label>
+        <input id="login-email" class="auth-input" type="email" placeholder="readypackers@readypackers.com" required />
+
+        <label class="auth-label" for="login-password">Contraseña</label>
+        <input id="login-password" class="auth-input" type="password" placeholder="Ready2026" required />
+
+        <button type="submit" class="auth-button">Ingresar</button>
+        <button type="button" id="show-forgot-password" class="auth-link">Olvidé mi contraseña</button>
+      </form>
+
+      <form id="forgot-password-form" class="auth-form auth-hidden">
+        <label class="auth-label" for="forgot-email">Correo electrónico</label>
+        <input id="forgot-email" class="auth-input" type="email" placeholder="readypackers@readypackers.com" required />
+
+        <button type="submit" class="auth-button">Solicitar restablecimiento</button>
+        <button type="button" id="show-reset-password" class="auth-link">Ya tengo un token</button>
+        <button type="button" id="back-to-login-from-forgot" class="auth-link">Volver al login</button>
+      </form>
+
+      <form id="reset-password-form" class="auth-form auth-hidden">
+        <label class="auth-label" for="reset-token">Token de restablecimiento</label>
+        <input id="reset-token" class="auth-input" type="text" placeholder="Pega aquí el token" required />
+
+        <label class="auth-label" for="reset-password">Nueva contraseña</label>
+        <input id="reset-password" class="auth-input" type="password" placeholder="Nueva contraseña" required />
+
+        <button type="submit" class="auth-button">Restablecer contraseña</button>
+        <button type="button" id="back-to-login-from-reset" class="auth-link">Volver al login</button>
+      </form>
+    </div>
+  </div>
+
   <!-- ═══════════════ SIDEBAR ═══════════════ -->
   <aside class="sidebar">
     <div class="sidebar-brand">
@@ -36,9 +77,11 @@
         <span id="conn-label">Desconectado</span>
       </div>
       <div class="sidebar-meta">
+        <span id="sidebar-user-email">—</span>
         <span id="sidebar-device-id">—</span>
         <span id="sidebar-last-update">—</span>
       </div>
+      <button id="logout-btn" class="btn-ghost sidebar-logout">Cerrar sesión</button>
     </div>
   </aside>
 
@@ -259,6 +302,7 @@
 
   <!-- model -->
   <script src="js/model/AppState.js"></script>
+  <script src="js/model/AuthService.js"></script>
   <script src="js/model/ApiService.js"></script>
 
   <!-- view -->
@@ -269,5 +313,6 @@
   <script src="js/controller/TelemetryController.js"></script>
   <script src="js/controller/AuditController.js"></script>
   <script src="js/controller/AppController.js"></script>
+  <script src="js/controller/AuthController.js"></script>
 </body>
 </html>

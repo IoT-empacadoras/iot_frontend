@@ -10,6 +10,8 @@ const AppState = {
   allTags:       [],
   chart:         null,   // instancia Chart.js activa
   deviceMap:     {},     // id → objeto device con health
+  authToken:     '',
+  currentUser:   null,
 
   setDevice(id) {
     this.currentDevice = id || this.defaultDevice;
@@ -30,5 +32,15 @@ const AppState = {
 
   setDeviceMap(map) {
     this.deviceMap = map;
+  },
+
+  setAuthSession(token, user) {
+    this.authToken = token || '';
+    this.currentUser = user || null;
+  },
+
+  clearAuthSession() {
+    this.authToken = '';
+    this.currentUser = null;
   },
 };

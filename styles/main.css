@@ -30,6 +30,114 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
 
+.auth-shell {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(30,58,95,.94), rgba(29,92,180,.88));
+  z-index: 2000;
+}
+
+.auth-hidden {
+  display: none !important;
+}
+
+.auth-card {
+  width: min(420px, 100%);
+  background: rgba(255,255,255,.96);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(15,23,42,.22);
+  padding: 28px;
+  border: 1px solid rgba(255,255,255,.35);
+}
+
+.auth-brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--brand2);
+  margin-bottom: 12px;
+}
+
+.auth-title {
+  font-size: 28px;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.auth-subtitle {
+  color: var(--text2);
+  margin-bottom: 18px;
+}
+
+.auth-message {
+  min-height: 22px;
+  font-size: 13px;
+  color: var(--text2);
+  margin-bottom: 10px;
+}
+
+.auth-message.err {
+  color: var(--red);
+}
+
+.auth-message.ok {
+  color: var(--green);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.auth-input {
+  width: 100%;
+  border: 1px solid var(--border2);
+  background: var(--bg2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+}
+
+.auth-input:focus {
+  border-color: var(--brand2);
+  box-shadow: 0 0 0 3px rgba(36,104,200,.12);
+}
+
+.auth-button {
+  margin-top: 6px;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: var(--brand2);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-link {
+  border: none;
+  background: transparent;
+  color: var(--brand2);
+  font-weight: 600;
+  padding: 4px 0;
+  text-align: left;
+  cursor: pointer;
+}
+
 /* ── Layout ──────────────────────────────────── */
 .layout {
   display: flex;
@@ -133,6 +241,11 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--b
 
 .sidebar-meta { font-size: 11px; color: rgba(255,255,255,.35); line-height: 1.6; }
 .sidebar-meta span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.sidebar-logout {
+  width: 100%;
+  margin-top: 12px;
+}
 
 /* ── MAIN ────────────────────────────────────── */
 .main {

@@ -5,6 +5,7 @@
  *             TelemetryController, AuditController
  */
 const AppController = (() => {
+  let bootstrapped = false;
 
   // ── Tabs ─────────────────────────────────────────────────────────────────────
   const TAB_META = {
@@ -69,6 +70,11 @@ const AppController = (() => {
       }
     });
 
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      AuthService.clearSession();
+      window.dispatchEvent(new CustomEvent('auth:required'));
+    });
+
   }
 
   // ── Health polling ────────────────────────────────────────────────────────────
@@ -113,8 +119,15 @@ const AppController = (() => {
 
   // ── Boot ──────────────────────────────────────────────────────────────────────
   function init() {
+    if (bootstrapped) {
+      document.getElementById('sidebar-user-email').textContent = AppState.currentUser?.email || '—';
+      return;
+    }
+
+    bootstrapped = true;
     setupTabs();
     setupEventListeners();
+    document.getElementById('sidebar-user-email').textContent = AppState.currentUser?.email || '—';
     checkHealth();
     TelemetryController.loadDevices();
     setInterval(checkHealth, 8000);
@@ -122,6 +135,3 @@ const AppController = (() => {
 
   return { init };
 })();
-
-// ── Arranque ──────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => AppController.init());
