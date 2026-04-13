@@ -1,8 +1,6 @@
 /**
  * js/controller/AppController.js
- * Punto de entrada. Gestiona tabs, salud del backend y cambios de dispositivo.
- * Depende de: AppState, ApiService, TelemetryView,
- *             TelemetryController, AuditController
+ * Archivo legado. El controlador activo es `AppControllerRuntime.js`.
  */
 const AppController = (() => {
   let bootstrapped = false;
