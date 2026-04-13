@@ -50,7 +50,10 @@ const AuthController = (() => {
       hideAuthShell();
       await AppController.enterPrivateApp();
     } catch (error) {
-      showMessage(error.message || 'No fue posible iniciar sesion.', 'err');
+      const message = [401, 403].includes(error.status)
+        ? 'Credenciales invalidas'
+        : (error.message || 'No fue posible iniciar sesion.');
+      showMessage(message, 'err');
     } finally {
       setLoginLoading(false);
     }
