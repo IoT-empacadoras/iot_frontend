@@ -13,8 +13,8 @@ const ApiClient = (() => {
   }
 
   class AuthSessionError extends ApiError {
-    constructor(message = 'Tu sesion expiro. Inicia sesion nuevamente.', data = null) {
-      super(message, 401, data);
+    constructor(message = 'Tu sesion expiro. Inicia sesion nuevamente.', data = null, status = 401) {
+      super(message, status, data);
       this.name = 'AuthSessionError';
     }
   }
@@ -65,7 +65,7 @@ const ApiClient = (() => {
 
     const data = await parseResponse(response);
 
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       AuthService.clearSession();
       window.dispatchEvent(new CustomEvent('auth:required', {
         detail: {
@@ -73,7 +73,7 @@ const ApiClient = (() => {
           message: sessionExpiredMessage,
         },
       }));
-      throw new AuthSessionError(sessionExpiredMessage, data);
+      throw new AuthSessionError(sessionExpiredMessage, data, response.status);
     }
 
     if (!response.ok) {

@@ -5,10 +5,21 @@
 const AuthService = (() => {
   const TOKEN_KEY = 'rp_auth_token';
   const USER_KEY = 'rp_auth_user';
+  const BACKEND_URL_KEY = 'rp_auth_backend_url';
 
   AppState.setBackendUrl(AppConfig.apiUrl);
 
+  function isStoredSessionFromCurrentBackend() {
+    const storedBackendUrl = localStorage.getItem(BACKEND_URL_KEY) || '';
+    return !storedBackendUrl || storedBackendUrl === AppConfig.apiUrl;
+  }
+
   function getToken() {
+    if (!isStoredSessionFromCurrentBackend()) {
+      clearSession();
+      return '';
+    }
+
     return AppState.authToken || localStorage.getItem(TOKEN_KEY) || '';
   }
 
@@ -24,12 +35,14 @@ const AuthService = (() => {
     AppState.setAuthSession(token, user);
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USER_KEY, JSON.stringify(user || null));
+    localStorage.setItem(BACKEND_URL_KEY, AppConfig.apiUrl);
   }
 
   function clearSession() {
     AppState.clearAuthSession();
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(BACKEND_URL_KEY);
   }
 
   async function restoreSession() {

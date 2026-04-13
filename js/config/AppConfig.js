@@ -3,7 +3,7 @@
  * Configuracion central del frontend para distintos entornos.
  */
 const AppConfig = (() => {
-  const DEFAULT_API_URL = 'https://iot-backend-b5v5.onrender.com';
+  const DEFAULT_API_URL = 'https://iot-backend-9l8s.onrender.com';
 
   function normalizeUrl(value) {
     return (value || '').trim().replace(/\/+$/, '');
