@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="api-base-url" content="https://iot-backend-9l8s.onrender.com">
   <title>ReadyPackers IoT — Monitor Industrial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,10 +22,10 @@
 
       <form id="login-form" class="auth-form">
         <label class="auth-label" for="login-email">Correo electrónico</label>
-        <input id="login-email" class="auth-input" type="email" placeholder="readypackers@gmail.com" required />
+        <input id="login-email" class="auth-input" type="email" placeholder="" required />
 
         <label class="auth-label" for="login-password">Contraseña</label>
-        <input id="login-password" class="auth-input" type="password" placeholder="ReadyPackers@2026" required />
+        <input id="login-password" class="auth-input" type="password" placeholder="*******" required />
 
         <button id="login-submit" type="submit" class="auth-button">Ingresar</button>
         <button type="button" id="show-forgot-password" class="auth-link">Olvidé mi contraseña</button>
@@ -430,41 +429,41 @@
   </main>
 
   <!-- utils -->
-  <script src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/helpers.js"></script>
 
   <!-- model -->
-  <script src="js/config/AppConfig.js"></script>
-  <script src="js/model/AppState.js"></script>
-  <script src="js/model/ApiClient.js"></script>
+  <script type="module" src="js/config/AppConfig.js"></script>
+  <script defer src="js/model/AppState.js"></script>
+  <script defer src="js/model/ApiClient.js"></script>
 
   <!-- repository -->
-  <script src="js/repository/AuthRepository.js"></script>
-  <script src="js/repository/DepartmentRepository.js"></script>
-  <script src="js/repository/UserRepository.js"></script>
-  <script src="js/repository/MachineRepository.js"></script>
-  <script src="js/repository/TelemetryRepository.js"></script>
-  <script src="js/repository/AuditRepository.js"></script>
+  <script defer src="js/repository/AuthRepository.js"></script>
+  <script defer src="js/repository/DepartmentRepository.js"></script>
+  <script defer src="js/repository/UserRepository.js"></script>
+  <script defer src="js/repository/MachineRepository.js"></script>
+  <script defer src="js/repository/TelemetryRepository.js"></script>
+  <script defer src="js/repository/AuditRepository.js"></script>
 
   <!-- service -->
-  <script src="js/service/AuthSessionService.js"></script>
-  <script src="js/service/RoleAccessService.js"></script>
-  <script src="js/service/DepartmentService.js"></script>
-  <script src="js/service/UserService.js"></script>
-  <script src="js/service/MachineService.js"></script>
-  <script src="js/service/TelemetryService.js"></script>
-  <script src="js/service/AuditService.js"></script>
-  <script src="js/service/AdminDashboardService.js"></script>
+  <script defer src="js/service/AuthSessionService.js"></script>
+  <script defer src="js/service/RoleAccessService.js"></script>
+  <script defer src="js/service/DepartmentService.js"></script>
+  <script defer src="js/service/UserService.js"></script>
+  <script defer src="js/service/MachineService.js"></script>
+  <script defer src="js/service/TelemetryService.js"></script>
+  <script defer src="js/service/AuditService.js"></script>
+  <script defer src="js/service/AdminDashboardService.js"></script>
 
   <!-- view -->
-  <script src="js/view/TelemetryView.js"></script>
-  <script src="js/view/AuditView.js"></script>
-  <script src="js/view/AdminView.js"></script>
+  <script defer src="js/view/TelemetryView.js"></script>
+  <script defer src="js/view/AuditView.js"></script>
+  <script defer src="js/view/AdminView.js"></script>
 
   <!-- controller -->
-  <script src="js/controller/TelemetryController.js"></script>
-  <script src="js/controller/AuditController.js"></script>
-  <script src="js/controller/AdminController.js"></script>
-  <script src="js/controller/AppControllerRuntime.js"></script>
-  <script src="js/controller/AuthController.js"></script>
+  <script defer src="js/controller/TelemetryController.js"></script>
+  <script defer src="js/controller/AuditController.js"></script>
+  <script defer src="js/controller/AdminController.js"></script>
+  <script defer src="js/controller/AppControllerRuntime.js"></script>
+  <script defer src="js/controller/AuthController.js"></script>
 </body>
 </html>

@@ -2,9 +2,7 @@
  * js/config/AppConfig.js
  * Configuracion central del frontend para distintos entornos.
  */
-const AppConfig = (() => {
-  const DEFAULT_API_URL = 'https://iot-backend-9l8s.onrender.com';
-
+window.AppConfig = (() => {
   function normalizeUrl(value) {
     return (value || '').trim().replace(/\/+$/, '');
   }
@@ -12,12 +10,13 @@ const AppConfig = (() => {
   function resolveApiUrl() {
     const runtimeConfig = window.__APP_CONFIG__ || {};
     const metaApiUrl = document.querySelector('meta[name="api-base-url"]')?.content || '';
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     return normalizeUrl(
       runtimeConfig.apiUrl ||
-      window.VITE_API_URL ||
+      apiUrl ||
       metaApiUrl ||
-      DEFAULT_API_URL
+      ''
     );
   }
 

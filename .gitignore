@@ -1,2 +1,4 @@
 meta_data
 skills-lock.json
+.env.example
+.env
