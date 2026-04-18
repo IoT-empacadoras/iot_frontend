@@ -8,14 +8,12 @@ const AdminDashboardService = (() => {
       throw new ApiClient.ApiError('Permisos insuficientes para administracion.', 403);
     }
 
-    const [departments, users, machines] = await Promise.all([
-      DepartmentService.list({ includeInactive }),
+    const [users, machines] = await Promise.all([
       UserService.list({ includeInactive }),
       MachineService.list({ includeInactive }),
     ]);
 
     return {
-      departments,
       users,
       machines: machines.map(machine => ({
         ...machine,

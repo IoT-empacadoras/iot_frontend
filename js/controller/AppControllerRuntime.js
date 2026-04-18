@@ -9,7 +9,7 @@ const AppController = (() => {
   const TAB_META = {
     telemetry: { title: 'Telemetria', subtitle: 'Datos continuos de proceso' },
     audit: { title: 'Auditoria', subtitle: 'Historial de configuracion y alarmas' },
-    admin: { title: 'Administracion', subtitle: 'Clientes, departamentos y maquinas' },
+    admin: { title: 'Administracion', subtitle: 'Clientes y maquinas' },
   };
 
   function getActiveTab() {

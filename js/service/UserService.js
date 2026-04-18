@@ -10,7 +10,6 @@ const UserService = (() => {
       name: (input.name || '').trim(),
       email: (input.email || '').trim(),
       password: input.password || '',
-      departmentId: input.departmentId ? Number(input.departmentId) : null,
       role: input.role || 'client',
       status: input.status || 'active',
     };
@@ -29,7 +28,6 @@ const UserService = (() => {
     const payload = { ...input };
     if (payload.name !== undefined) payload.name = (payload.name || '').trim();
     if (payload.email !== undefined) payload.email = (payload.email || '').trim();
-    if (payload.departmentId !== undefined) payload.departmentId = payload.departmentId ? Number(payload.departmentId) : null;
     return payload;
   }
 

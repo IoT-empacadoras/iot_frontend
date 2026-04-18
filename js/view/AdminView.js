@@ -17,18 +17,11 @@ const AdminView = (() => {
     target.className = 'admin-message' + (type ? ' ' + type : '');
   }
 
-  function getDepartmentFormData() {
-    return {
-      name: el('admin-department-name')?.value || '',
-    };
-  }
-
   function getUserFormData() {
     return {
       name: el('admin-user-name')?.value || '',
       email: el('admin-user-email')?.value || '',
       password: el('admin-user-password')?.value || '',
-      departmentId: el('admin-user-department')?.value || '',
       role: el('admin-user-role')?.value || 'client',
       status: el('admin-user-status')?.value || 'active',
     };
@@ -83,10 +76,6 @@ const AdminView = (() => {
     window.setTimeout(() => machineMap.invalidateSize(), 0);
   }
 
-  function resetDepartmentForm() {
-    el('admin-department-form')?.reset();
-  }
-
   function resetUserForm() {
     el('admin-user-form')?.reset();
   }
@@ -133,20 +122,8 @@ const AdminView = (() => {
   }
 
   function setLoading() {
-    const rows = '<tr><td colspan="6" class="empty-row">Cargando...</td></tr>';
-    if (el('admin-departments-body')) el('admin-departments-body').innerHTML = '<tr><td colspan="3" class="empty-row">Cargando...</td></tr>';
-    if (el('admin-users-body')) el('admin-users-body').innerHTML = rows;
+    if (el('admin-users-body')) el('admin-users-body').innerHTML = '<tr><td colspan="5" class="empty-row">Cargando...</td></tr>';
     if (el('admin-machines-body')) el('admin-machines-body').innerHTML = '<tr><td colspan="7" class="empty-row">Cargando...</td></tr>';
-  }
-
-  function renderDepartmentOptions(departments) {
-    const options = ['<option value="">Sin departamento asignado</option>']
-      .concat(departments.map(department =>
-        '<option value="' + Helpers.escapeHtml(department.id) + '">' +
-          Helpers.escapeHtml(department.name) +
-        '</option>'
-      ));
-    if (el('admin-user-department')) el('admin-user-department').innerHTML = options.join('');
   }
 
   function renderUserOptions(users) {
@@ -160,32 +137,12 @@ const AdminView = (() => {
     if (el('admin-machine-user')) el('admin-machine-user').innerHTML = options.join('');
   }
 
-  function renderDepartments(departments) {
-    const tbody = el('admin-departments-body');
-    if (!tbody) return;
-
-    if (!departments.length) {
-      tbody.innerHTML = '<tr><td colspan="3" class="empty-row">Sin departamentos registrados</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = departments.map(department =>
-      '<tr>' +
-        '<td>' + Helpers.escapeHtml(department.id) + '</td>' +
-        '<td>' + Helpers.escapeHtml(department.name) + '</td>' +
-        '<td><span class="status-pill status-' + Helpers.escapeHtml(department.status || 'active') + '">' +
-          Helpers.escapeHtml(department.status || 'active') +
-        '</span></td>' +
-      '</tr>'
-    ).join('');
-  }
-
   function renderUsers(users) {
     const tbody = el('admin-users-body');
     if (!tbody) return;
 
     if (!users.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty-row">Sin clientes registrados</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Sin clientes registrados</td></tr>';
       return;
     }
 
@@ -196,7 +153,6 @@ const AdminView = (() => {
         '<tr>' +
           '<td>' + Helpers.escapeHtml(user.name || user.username || '—') + '</td>' +
           '<td>' + Helpers.escapeHtml(user.email || '—') + '</td>' +
-          '<td>' + Helpers.escapeHtml(user.departmentName || '—') + '</td>' +
           '<td>' + Helpers.escapeHtml(user.role || '—') + '</td>' +
           '<td><span class="status-pill status-' + Helpers.escapeHtml(status) + '">' + Helpers.escapeHtml(status) + '</span></td>' +
           '<td><button type="button" class="btn-ghost btn-sm" data-admin-action="toggle-user" ' +
@@ -265,10 +221,8 @@ const AdminView = (() => {
     }).join('');
   }
 
-  function renderDashboard({ departments, users, machines }) {
-    renderDepartmentOptions(departments);
+  function renderDashboard({ users, machines }) {
     renderUserOptions(users);
-    renderDepartments(departments);
     renderUsers(users);
     renderMachines(machines);
   }
@@ -276,10 +230,8 @@ const AdminView = (() => {
   return {
     setMessage,
     setLoading,
-    getDepartmentFormData,
     getUserFormData,
     getMachineFormData,
-    resetDepartmentForm,
     resetUserForm,
     resetMachineForm,
     fillMachineForm,

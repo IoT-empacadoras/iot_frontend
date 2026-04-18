@@ -270,34 +270,6 @@
       <div class="admin-grid">
         <div class="card admin-panel">
           <div class="card-header">
-            <span class="card-title">Departamentos</span>
-          </div>
-          <form id="admin-department-form" class="admin-form">
-            <label class="admin-label" for="admin-department-name">Nombre</label>
-            <div class="admin-inline-form">
-              <input id="admin-department-name" class="admin-input" type="text" placeholder="Cauca" required>
-              <button class="btn-primary admin-submit" type="submit">Crear</button>
-            </div>
-            <div id="admin-department-message" class="admin-message"></div>
-          </form>
-          <div class="table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Departamento</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody id="admin-departments-body">
-                <tr><td colspan="3" class="empty-row">Cargando...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="card admin-panel">
-          <div class="card-header">
             <span class="card-title">Clientes</span>
           </div>
           <form id="admin-user-form" class="admin-form admin-form-grid">
@@ -312,10 +284,6 @@
             <div>
               <label class="admin-label" for="admin-user-password">Password inicial</label>
               <input id="admin-user-password" class="admin-input" type="password" required>
-            </div>
-            <div>
-              <label class="admin-label" for="admin-user-department">Departamento</label>
-              <select id="admin-user-department" class="admin-input"></select>
             </div>
             <div>
               <label class="admin-label" for="admin-user-role">Rol</label>
@@ -342,14 +310,13 @@
                 <tr>
                   <th>Nombre</th>
                   <th>Email</th>
-                  <th>Departamento</th>
                   <th>Rol</th>
                   <th>Estado</th>
                   <th>Acción</th>
                 </tr>
               </thead>
               <tbody id="admin-users-body">
-                <tr><td colspan="6" class="empty-row">Cargando...</td></tr>
+                <tr><td colspan="5" class="empty-row">Cargando...</td></tr>
               </tbody>
             </table>
           </div>
@@ -377,8 +344,8 @@
               <input id="admin-machine-type" class="admin-input" type="text" value="HMI">
             </div>
             <div>
-              <label class="admin-label" for="admin-machine-location">Departamento</label>
-              <input id="admin-machine-location" class="admin-input" type="text" placeholder="Cauca">
+              <label class="admin-label" for="admin-machine-location">Ubicacion</label>
+              <input id="admin-machine-location" class="admin-input" type="text" placeholder="Planta principal">
             </div>
             <div>
               <label class="admin-label" for="admin-machine-pais">Pais</label>
@@ -423,7 +390,7 @@
                   <th>Nombre</th>
                   <th>deviceKey</th>
                   <th>Cliente</th>
-                  <th>Departamento</th>
+                  <th>Ubicacion</th>
                   <th>Pais</th>
                   <th>Estado</th>
                   <th>Acciones</th>
@@ -456,7 +423,6 @@
 
   <!-- repository -->
   <script defer src="js/repository/AuthRepository.js"></script>
-  <script defer src="js/repository/DepartmentRepository.js"></script>
   <script defer src="js/repository/UserRepository.js"></script>
   <script defer src="js/repository/MachineRepository.js"></script>
   <script defer src="js/repository/TelemetryRepository.js"></script>
@@ -465,7 +431,6 @@
   <!-- service -->
   <script defer src="js/service/AuthSessionService.js"></script>
   <script defer src="js/service/RoleAccessService.js"></script>
-  <script defer src="js/service/DepartmentService.js"></script>
   <script defer src="js/service/UserService.js"></script>
   <script defer src="js/service/MachineService.js"></script>
   <script defer src="js/service/TelemetryService.js"></script>

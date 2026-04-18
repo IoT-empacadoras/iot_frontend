@@ -27,19 +27,6 @@ const AdminController = (() => {
     }
   }
 
-  async function handleDepartmentSubmit(event) {
-    event.preventDefault();
-    try {
-      AdminView.setMessage('admin-department-message', 'Creando departamento...');
-      await DepartmentService.create(AdminView.getDepartmentFormData());
-      AdminView.resetDepartmentForm();
-      AdminView.setMessage('admin-department-message', 'Departamento guardado.', 'ok');
-      await refresh();
-    } catch (error) {
-      showError('admin-department-message', error, 'No fue posible crear el departamento.');
-    }
-  }
-
   async function handleUserSubmit(event) {
     event.preventDefault();
     try {
@@ -115,7 +102,6 @@ const AdminController = (() => {
     if (eventsBound) return;
     eventsBound = true;
 
-    document.getElementById('admin-department-form')?.addEventListener('submit', handleDepartmentSubmit);
     document.getElementById('admin-user-form')?.addEventListener('submit', handleUserSubmit);
     document.getElementById('admin-machine-form')?.addEventListener('submit', handleMachineSubmit);
     document.getElementById('tab-admin')?.addEventListener('click', handleAdminAction);
