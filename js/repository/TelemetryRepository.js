@@ -17,7 +17,8 @@ const TelemetryRepository = (() => {
 
   async function getSensors(deviceKey) {
     const data = await ApiClient.json('/api/devices/' + encodeURIComponent(deviceKey) + '/sensors');
-    return data?.tags || [];
+    if (Array.isArray(data)) return data;
+    return data?.sensors || data?.variables || data?.tags || [];
   }
 
   async function getLatest(deviceKey) {

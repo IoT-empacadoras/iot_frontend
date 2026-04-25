@@ -703,6 +703,7 @@ select:focus { border-color: var(--brand2); box-shadow: 0 0 0 3px rgba(36,104,20
   overflow: hidden;
   transition: box-shadow .2s, border-color .2s;
   box-shadow: var(--shadow);
+  min-width: 0;
 }
 .kpi-card:hover {
   border-color: var(--border2);
@@ -716,15 +717,15 @@ select:focus { border-color: var(--brand2); box-shadow: 0 0 0 3px rgba(36,104,20
   border-radius: 2px 0 0 2px;
 }
 
-.kpi-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
-.kpi-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.kpi-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; overflow-wrap: anywhere; }
+.kpi-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.1; overflow-wrap: anywhere; }
 .kpi-footer { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
 .kpi-trend {
   font-size: 11px; padding: 2px 7px; border-radius: 99px; font-weight: 600;
 }
 .kpi-trend.up   { background: rgba(22,163,74,.12);  color: #15803d; }
 .kpi-trend.down { background: rgba(220,38,38,.12);  color: #b91c1c; }
-.kpi-sub { font-size: 11px; color: var(--text3); }
+.kpi-sub { font-size: 11px; color: var(--text3); overflow-wrap: anywhere; }
 
 /* Estado máquina KPI especial */
 .kpi-state-val { font-size: 16px; font-weight: 700; }

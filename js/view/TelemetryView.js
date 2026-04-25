@@ -3,12 +3,6 @@
  * Renders telemetry tab UI.
  */
 const TelemetryView = (() => {
-  const KPI_DEFS = [
-    { id: 'kpi-ppm', key: 'telemetry_cantidad_productos_total', unit: '', dec: 0 },
-    { id: 'kpi-sp-ppm', key: 'telemetry_sp_peso_promedio', unit: 'g', dec: 1 },
-    { id: 'kpi-peso', key: 'telemetry_pv_peso_promedio', unit: 'g', dec: 1 },
-  ];
-
   function t(key, params = {}, fallback = '') {
     return I18nService.t(key, params, fallback);
   }
@@ -36,6 +30,36 @@ const TelemetryView = (() => {
     return isActive
       ? '\u25cf ' + id + ' (' + t('telemetry.activeDeviceSuffix') + ')'
       : '\u25cb ' + id;
+  }
+
+  function getSensorTag(sensor) {
+    return typeof sensor === 'string'
+      ? sensor
+      : sensor?.tag_name || sensor?.tag || sensor?.tagName || sensor?.name || sensor?.variable_name || '';
+  }
+
+  function getSensorLabel(sensor) {
+    if (typeof sensor === 'string') return Helpers.formatTagLabel(sensor);
+    const tag = getSensorTag(sensor);
+    const name = sensor?.description || sensor?.label || sensor?.display_name || sensor?.displayName || sensor?.name || Helpers.formatTagLabel(tag);
+    const unit = sensor?.engineering_unit || sensor?.unit || '';
+    return unit ? name + ' (' + unit + ')' : name;
+  }
+
+  function getSensorIcon(tag) {
+    const label = Helpers.formatTagLabel(tag).trim();
+    const parts = label.split(/\s+/).filter(Boolean);
+    return (parts[0] || tag || '--').slice(0, 3).toUpperCase();
+  }
+
+  function formatCurrentValue(value, unit) {
+    if (value === null || value === undefined || value === '') return t('common.emptyDash', {}, 'â€”');
+    if (typeof value === 'boolean') return String(value).toUpperCase();
+    const numeric = Number(value);
+    const formatted = Number.isFinite(numeric)
+      ? (Number.isInteger(numeric) ? String(numeric) : numeric.toFixed(2))
+      : String(value);
+    return formatted + (unit ? ' ' + unit : '');
   }
 
   function populateDeviceSelector(devices, currentId) {
@@ -68,18 +92,21 @@ const TelemetryView = (() => {
     });
   }
 
-  function populateVariableSelector(tags) {
+  function populateVariableSelector(sensors) {
     const select = document.getElementById('variable-selector');
     if (!select) return;
 
-    if (!tags.length) {
+    if (!sensors.length) {
       select.innerHTML = '<option value="">' + Helpers.escapeHtml(t('telemetry.noVariablesYet')) + '</option>';
       return;
     }
 
     const previousValue = select.value;
-    select.innerHTML = tags.map(tag =>
-      '<option value="' + Helpers.escapeHtml(tag) + '">' + Helpers.escapeHtml(Helpers.formatTagLabel(tag)) + '</option>'
+    const tags = sensors.map(getSensorTag).filter(Boolean);
+    select.innerHTML = sensors.map(sensor => {
+      const tag = getSensorTag(sensor);
+      return '<option value="' + Helpers.escapeHtml(tag) + '">' + Helpers.escapeHtml(getSensorLabel(sensor)) + '</option>';
+    }
     ).join('');
 
     if (tags.includes(previousValue)) {
@@ -87,33 +114,46 @@ const TelemetryView = (() => {
     }
   }
 
-  function showInactiveDevice() {
-    KPI_DEFS.forEach(({ id }) => {
-      const card = document.getElementById(id);
-      if (!card) return;
-      const valueElement = card.querySelector('.kpi-value');
-      if (!valueElement) return;
-      valueElement.textContent = t('telemetry.inactiveValue');
-      valueElement.classList.add('is-muted');
-    });
-  }
-
-  function syncTelemetryLayout(tags) {
-    const activeTags = new Set(tags);
-
-    KPI_DEFS.forEach(({ id, key }) => {
-      const card = document.getElementById(id);
-      if (!card) return;
-      card.classList.toggle('is-hidden', !activeTags.has(key));
-    });
+  function syncTelemetryLayout(sensors) {
+    const tags = sensors.map(getSensorTag).filter(Boolean);
 
     const variableSelector = document.getElementById('variable-selector');
     const controlsBar = variableSelector?.closest('.controls-bar');
     if (controlsBar) controlsBar.classList.toggle('is-hidden', !tags.length);
   }
 
+  function renderSensorCards(rows) {
+    const grid = document.querySelector('.kpi-grid');
+    if (!grid) return;
+
+    if (!rows.length) {
+      grid.innerHTML = '<div class="kpi-card"><div class="kpi-body"><div class="kpi-value">' +
+        Helpers.escapeHtml(t('common.emptyDash', {}, 'â€”')) +
+        '</div><div class="kpi-label">' + Helpers.escapeHtml(t('telemetry.noVariablesYet')) + '</div></div></div>';
+      return;
+    }
+
+    grid.innerHTML = rows.map(row => {
+      const tag = getSensorTag(row);
+      const unit = row.unit || row.engineering_unit || '';
+      const label = row.name || getSensorLabel(row);
+      const timestamp = row.timestamp ? Helpers.fmtDateTime(row.timestamp) : t('common.emptyDash', {}, 'â€”');
+
+      return (
+        '<div class="kpi-card" data-tag="' + Helpers.escapeHtml(tag) + '">' +
+          '<div class="kpi-icon">' + Helpers.escapeHtml(getSensorIcon(tag)) + '</div>' +
+          '<div class="kpi-body">' +
+            '<div class="kpi-value">' + Helpers.escapeHtml(formatCurrentValue(row.value, unit)) + '</div>' +
+            '<div class="kpi-label">' + Helpers.escapeHtml(label) + '</div>' +
+            '<div class="kpi-sub">' + Helpers.escapeHtml(timestamp) + '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
   function updateKpiCards(data) {
-    KPI_DEFS.forEach(({ id, key, unit, dec }) => {
+    [].forEach(({ id, key, unit, dec }) => {
       const card = document.getElementById(id);
       if (!card) return;
       const valueElement = card.querySelector('.kpi-value');
@@ -257,8 +297,7 @@ const TelemetryView = (() => {
     refreshDeviceLabels,
     populateVariableSelector,
     syncTelemetryLayout,
-    updateKpiCards,
-    showInactiveDevice,
+    renderSensorCards,
     setRunningInactive,
     renderChart,
     updateChartHeader,

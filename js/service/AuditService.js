@@ -9,16 +9,31 @@ const AuditService = (() => {
     }
   }
 
+  async function getRegisteredParameterSet(deviceKey) {
+    const sensors = await TelemetryService.getSensors(deviceKey);
+    return new Set(sensors.map(sensor => sensor.tag_name).filter(Boolean));
+  }
+
+  function filterByRegisteredParameters(items, parameters) {
+    return items.filter(item => parameters.has(item.parameter));
+  }
+
   async function getVisibleEventSummary(deviceKey) {
     ensureAuditAllowed();
-    const summary = await AuditRepository.getEventSummary(deviceKey);
-    return Object.values(summary).filter(e => Helpers.isVisibleVariableTag(e.parameter));
+    const [summary, parameters] = await Promise.all([
+      AuditRepository.getEventSummary(deviceKey),
+      getRegisteredParameterSet(deviceKey),
+    ]);
+    return filterByRegisteredParameters(Object.values(summary), parameters);
   }
 
   async function getVisibleEvents(deviceKey, filters = {}) {
     ensureAuditAllowed();
-    const events = await AuditRepository.getEvents(deviceKey, filters);
-    return events.filter(e => Helpers.isVisibleVariableTag(e.parameter));
+    const [events, parameters] = await Promise.all([
+      AuditRepository.getEvents(deviceKey, filters),
+      getRegisteredParameterSet(deviceKey),
+    ]);
+    return filterByRegisteredParameters(events, parameters);
   }
 
   return {

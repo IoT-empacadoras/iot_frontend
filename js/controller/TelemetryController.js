@@ -7,10 +7,8 @@ const TelemetryController = (() => {
     let devices = [];
     try {
       const remote = await TelemetryService.getDeviceObjects();
-      const activeDevices = remote.filter(device => device.id && device.health?.status === 'healthy');
-      const otherDevices = remote.filter(device => device.id && device.health?.status !== 'healthy');
       const allIds = new Set([...remote.map(device => device.id).filter(Boolean)]);
-      const allDevices = [...activeDevices, ...otherDevices];
+      const allDevices = remote.filter(device => device.id);
       allIds.forEach(id => {
         if (!allDevices.find(device => device.id === id)) allDevices.push({ id });
       });
@@ -20,12 +18,13 @@ const TelemetryController = (() => {
         TelemetryView.populateDeviceSelector([], '');
         TelemetryView.populateVariableSelector([]);
         TelemetryView.syncTelemetryLayout([]);
+        TelemetryView.renderSensorCards([]);
         return;
       }
 
       const existsCurrent = devices.some(device => device.id === AppState.currentDevice);
       if (!existsCurrent) {
-        const preferred = activeDevices[0]?.id || devices[0]?.id || '';
+        const preferred = devices[0]?.id || '';
         AppState.defaultDevice = preferred;
         AppState.setDevice(preferred);
       }
@@ -43,22 +42,25 @@ const TelemetryController = (() => {
 
   async function loadTags() {
     try {
-      const tags = await TelemetryService.getVisibleSensors(AppState.currentDevice);
+      const rows = await TelemetryService.getSensorRows(AppState.currentDevice);
+      const sensors = rows.map(row => row.sensor);
+      const tags = rows.map(row => row.tag_name).filter(Boolean);
 
       AppState.setTags(tags);
-      TelemetryView.syncTelemetryLayout(tags);
+      TelemetryView.syncTelemetryLayout(sensors);
+      TelemetryView.renderSensorCards(rows);
 
       if (!tags.length) {
         TelemetryView.populateVariableSelector([]);
-        TelemetryView.updateKpiCards({});
         AppState.clearChart();
         TelemetryView.updateChartHeader(I18nService.t('telemetry.inactiveVariables'), '', 0);
         TelemetryView.renderTable([]);
         return;
       }
 
-      TelemetryView.populateVariableSelector(tags);
-      await Promise.all([updateKpis(), loadChartData()]);
+      TelemetryView.populateVariableSelector(sensors);
+      TelemetryView.updateSidebarTime();
+      await loadChartData();
     } catch (error) {
       TelemetryView.setConnStatus('offline');
       console.error('[TelemetryController] loadTags', error);
@@ -69,8 +71,8 @@ const TelemetryController = (() => {
     try {
       const device = AppState.deviceMap[AppState.currentDevice];
       const isInactive = !device || !device.health;
-      const data = await TelemetryService.getLatest(AppState.currentDevice);
-      TelemetryView.updateKpiCards(data);
+      const rows = await TelemetryService.getSensorRows(AppState.currentDevice);
+      TelemetryView.renderSensorCards(rows);
       if (isInactive) TelemetryView.setRunningInactive();
       TelemetryView.updateSidebarTime();
     } catch {}

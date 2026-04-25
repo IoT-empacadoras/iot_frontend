@@ -179,7 +179,7 @@ const AppController = (() => {
     TelemetryView.populateDeviceSelector([], '');
     TelemetryView.populateVariableSelector([]);
     TelemetryView.syncTelemetryLayout([]);
-    TelemetryView.updateKpiCards({});
+    TelemetryView.renderSensorCards([]);
     TelemetryView.setRunningInactive();
     TelemetryView.updateChartHeader(I18nService.t('telemetry.seriesTitle'), '', 0);
     TelemetryView.renderTable([]);
