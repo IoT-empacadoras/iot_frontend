@@ -109,7 +109,7 @@ window.ReadyPackersLocales.es = {
     records: 'N registros',
     selectVariableToLoad: 'Selecciona una variable para cargar datos',
     noDevices: 'Sin dispositivos',
-    noVariablesYet: 'Sin variables aún',
+    noVariablesYet: 'Sin variables registradas',
     inactiveValue: 'Inactivo',
     activeDeviceSuffix: 'activo',
     noAvailableData: 'Sin datos disponibles',
